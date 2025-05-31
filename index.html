@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blender初心者向けチュートリアル：マグカップ作成 SPA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices:
+        - Report Info: Blender introduction -> Goal: Inform -> Presentation: Text, Lists -> Interaction: None -> Justification: Standard textual presentation.
+        - Report Info: Blender UI Overview -> Goal: Inform/Explain -> Presentation: Textual descriptions of UI areas (e.g., 3D Viewport, Outliner), using styled divs to visually group related info. -> Interaction: Navigation to this section. -> Justification: Clear explanation of interface with detailed image placeholders.
+        - Report Info: Mouse/Keyboard Controls -> Goal: Instruct -> Presentation: Lists, `<code>` tags for keys. -> Interaction: None. -> Justification: Direct instruction with image placeholders for visual aid.
+        - Report Info: Object Manipulation (Move, Rotate, Scale) -> Goal: Instruct -> Presentation: Textual description of tools and shortcuts. -> Interaction: None. -> Justification: Direct instruction with image placeholders for visual aid.
+        - Report Info: Mug Modeling Steps (Add Cylinder, Edit Mode, Extrude, Add Torus, Join) -> Goal: Instruct (step-by-step) -> Presentation: Ordered lists, detailed instructions for each action, `<code>` for keys/commands. -> Interaction: User follows along in Blender. -> Justification: Clear, sequential steps for practical exercise with detailed image placeholders.
+        - Report Info: Materials -> Goal: Instruct -> Presentation: Textual guide to material properties UI. -> Interaction: None. -> Justification: Explaining UI interaction with detailed image placeholders.
+        - Report Info: Rendering & Next Steps -> Goal: Inform/Guide -> Presentation: Text, Lists, Links. -> Interaction: Clickable links. -> Justification: Providing closure and further resources with image placeholders.
+        - CONFIRMING NO SVG/Mermaid. All visual representation of UI elements will be through descriptive text or basic HTML/CSS structures, supplemented by detailed image placeholders.
+        -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .active-nav-link {
+            background-color: #0284c7; /* sky-600 */
+            color: white;
+        }
+        .nav-link:hover {
+            background-color: #f1f5f9; /* slate-100 */
+            color: #0f172a; /* slate-900 */
+        }
+        .content-section {
+            scroll-margin-top: 6rem; /* Adjust this value if the "black bar" is taller. 6rem = approx 96px. This ensures content isn't hidden under a fixed header when an anchor link is followed. */
+            /* The class "p-6" on the section element itself provides padding all around, including top. */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; 
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+            max-height: 400px; 
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        #mobileNavToggle {
+            z-index: 60; 
+        }
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        .translate-x-sidebar-full {
+             transform: translateX(-100%);
+        }
+        @media (min-width: 768px) { 
+            .translate-x-sidebar-full {
+                 transform: translateX(0);
+            }
+        }
+        .image-placeholder {
+            border: 2px dashed #cbd5e1; /* slate-300 */
+            background-color: #f8fafc; /* slate-50 */
+            color: #64748b; /* slate-500 */
+            padding: 1rem;
+            text-align: center;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex">
+
+    <button id="mobileNavToggle" class="md:hidden fixed top-4 left-4 p-2 bg-sky-500 text-white rounded-md shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+
+    <nav id="sidebar" class="bg-white text-slate-700 w-64 h-screen fixed top-0 left-0 shadow-lg p-5 space-y-2 overflow-y-auto translate-x-sidebar-full md:translate-x-0 z-50">
+        <h1 class="text-xl font-bold text-sky-700 pb-4 border-b border-slate-200">Blenderチュートリアル</h1>
+        <ul class="space-y-1">
+            <li><a href="#slide1" class="nav-link block p-2 rounded-md">Blenderってなに？</a></li>
+            <li><a href="#slide2" class="nav-link block p-2 rounded-md">最初の画面</a></li>
+            <li><a href="#slide3" class="nav-link block p-2 rounded-md">画面操作の基本</a></li>
+            <li><a href="#slide4" class="nav-link block p-2 rounded-md">オブジェクトの操作</a></li>
+            <li><a href="#slide5" class="nav-link block p-2 rounded-md">ステップ1：基本の形</a></li>
+            <li><a href="#slide6" class="nav-link block p-2 rounded-md">ステップ2：編集モード</a></li>
+            <li><a href="#slide7" class="nav-link block p-2 rounded-md">ステップ3：押し出し</a></li>
+            <li><a href="#slide8" class="nav-link block p-2 rounded-md">ステップ4：取っ手準備</a></li>
+            <li><a href="#slide9" class="nav-link block p-2 rounded-md">ステップ5：取っ手結合</a></li>
+            <li><a href="#slide10" class="nav-link block p-2 rounded-md">ステップ6：色を塗る</a></li>
+            <li><a href="#slide11" class="nav-link block p-2 rounded-md">完成と次へ</a></li>
+        </ul>
+    </nav>
+
+    <main class="flex-1 md:ml-64 p-6 md:p-10 space-y-12 overflow-y-auto">
+        
+        <section id="slide1" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">スライド 1: Blenderってなに？</h2>
+            <div class="image-placeholder my-4">
+                <strong>[画像プレースホルダー]</strong>
+                <p>Blenderの公式ロゴと、Blenderで作成された多様な3D作品（例：精巧なキャラクターモデル、美しい風景、リアルなプロダクトデザインなど）がコラージュされた魅力的なイメージ。</p>
+            
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Blenderへようこそ！</h3>
+            <p class="mb-4">Blender（ブレンダー）は、無料で使える多機能な3Dコンピュータグラフィックスソフトウェアです。</p>
+            <h4 class="text-lg font-semibold mb-2">Blenderでできること:</h4>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li><strong>3Dモデリング:</strong> キャラクター、建物、小物など、あらゆる形を立体的に作れます。</li>
+                <li><strong>アニメーション:</strong> 作ったモデルを動かして、生き生きとしたアニメーションを作成できます。</li>
+                <li><strong>レンダリング:</strong> 写真のようにリアルな画像や映像を作り出せます。</li>
+                <li><strong>動画編集:</strong> 高度な動画編集機能も備わっています。</li>
+                <li>その他、VFX（視覚効果）、スカルプト、シミュレーションなど、プロの現場でも使われる機能がたくさん！</li>
+            </ul>
+            <p class="mb-4">「なんだか難しそう…」と感じるかもしれませんが、大丈夫！このチュートリアルでは、Blenderの基本的な操作を学びながら、簡単な「マグカップ」を一緒に作ってみましょう。</p>
+            <h4 class="text-lg font-semibold mb-2">まずはBlenderをダウンロード！</h4>
+            <ul class="list-disc list-inside">
+                <li>Blender公式サイト: <a href="https://www.blender.org/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-sky-800 underline">https://www.blender.org/</a>
+                    <ul class="list-inside ml-4">
+                        <li>上記サイトから、お使いのパソコン（Windows, Mac, Linux）に合ったバージョンをダウンロードしてインストールしてください。</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="mt-4 text-sm text-slate-600">このセクションでは、Blenderの概要とその魅力、そして学習を始めるための準備（ダウンロード）について説明しています。Blenderでどのようなことができるのかを知り、実際にソフトウェアを導入してみましょう。</p>
+        </section>
+
+        <section id="slide2" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">スライド 2: Blenderを起動してみよう！最初の画面</h2>
+            <div class="image-placeholder my-4">
+                <strong>[画像プレースホルダー]</strong>
+                <p>Blender起動直後の画面全体のスクリーンショット。中央に大きく3Dビューポート（デフォルトの立方体、ライト、カメラが配置）、右上にアウトライナー、右下にプロパティエディタ、画面下部にタイムライン、3Dビューポートの左側にツールバーが表示されている状態。各主要エリアに番号と名称（例：1. 3Dビューポート, 2. アウトライナー...）が振られているとより分かりやすい。</p>
+            </div>
+            <p class="mb-4">Blenderを起動すると、このような画面が表示されます。最初は情報量が多く感じるかもしれませんが、少しずつ慣れていきましょう。</p>
+            <h3 class="text-xl font-semibold mb-2">主な画面構成:</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-2">
+                <li><strong>3Dビューポート (3D Viewport):</strong>
+                    <ul class="list-disc list-inside ml-6">
+                        <li>画面中央の最も大きなウィンドウです。ここで3Dモデルを作成・編集したり、視点を変えたりします。</li>
+                        <li>最初から立方体 (Cube)、ライト (Light)、カメラ (Camera) が配置されています。
+                            <ul class="list-circle list-inside ml-6">
+                                <li><strong>立方体:</strong> これから編集していくオブジェクトの基本形です。</li>
+                                <li><strong>ライト:</strong> オブジェクトを照らす光源です。</li>
+                                <li><strong>カメラ:</strong> レンダリング（画像出力）する際の視点となります。</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>アウトライナー (Outliner):</strong>
+                    <ul class="list-disc list-inside ml-6">
+                        <li>画面右上にあり、シーン内の全てのオブジェクトやデータが一覧表示されます。ここでオブジェクトを選択したり、表示/非表示を切り替えたりできます。</li>
+                    </ul>
+                </li>
+                <li><strong>プロパティエディタ (Properties Editor):</strong>
+                    <ul class="list-disc list-inside ml-6">
+                        <li>画面右下にあり、選択しているオブジェクトやツールの詳細な設定を行います。たくさんのタブが縦に並んでいます。</li>
+                    </ul>
+                </li>
+                <li><strong>タイムライン (Timeline):</strong>
+                    <ul class="list-disc list-inside ml-6">
+                        <li>画面下部にあり、アニメーションを作成する際に使います。今回はあまり使いません。</li>
+                    </ul>
+                </li>
+                <li><strong>ツールバー (Toolbar):</strong>
+                    <ul class="list-disc list-inside ml-6">
+                        <li>3Dビューポートの左側にあり、オブジェクトを操作するための基本的なツールが並んでいます。（表示されていない場合は <code class="bg-slate-200 px-1 rounded">T</code> キーで表示/非表示を切り替えられます）</li>
+                    </ul>
+                </li>
+                <li><strong>ヘッダー (Header):</strong>
+                    <ul class="list-disc list-inside ml-6">
+                        <li>各ウィンドウの上部または下部にあり、そのウィンドウに関連するメニューや設定項目が表示されます。3Dビューポートのヘッダーには、オブジェクトモード/編集モードの切り替えなどがあります。</li>
+                    </ul>
+                </li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">最初の操作：スプラッシュスクリーンを消す</h3>
+            <p class="mb-4">起動時に表示されるスプラッシュスクリーン（Blenderのロゴやバージョン情報が書かれた小さなウィンドウ）は、画面のどこか（3Dビューポートなど）を左クリックすると消えます。</p>
+            <p class="mt-4 text-sm text-slate-600">このセクションでは、Blenderの基本的な画面構成について学びます。各エリアの名称と役割を把握することで、今後の操作がスムーズになります。</p>
+        </section>
+
+        <section id="slide3" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">スライド 3: 画面操作の基本 ～視点をグリグリ動かしてみよう～</h2>
+            <div class="image-placeholder my-4">
+                <strong>[画像プレースホルダー]</strong>
+                <p>Blenderの3Dビューポート内で、マウス操作（中ボタンドラッグで視点回転、ホイールでズーム、Shift+中ボタンドラッグで視点平行移動）を行っている様子を示すスクリーンショットまたは図解。各操作と視点の変化が矢印などで示されていると良い。また、キーボード右側のテンキーの画像と、代表的な視点変更キー（例：1で正面、7で上面）がハイライトされている図。</p>
+            </div>
+            <p class="mb-4">3D空間で作業するには、オブジェクトを様々な角度から見ることが重要です。</p>
+            <h3 class="text-xl font-semibold mb-2">マウスでの視点操作 (3Dビューポート内):</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li><strong>回転 (Orbit):</strong> マウスの <strong>中ボタン (ホイールボタン) を押しながら</strong> ドラッグします。
+                    <ul class="list-inside ml-6"><li>ビューポートの中心を軸にして視点が回転します。</li></ul>
+                </li>
+                <li><strong>ズーム (Zoom):</strong> マウスの <strong>ホイールを上下に回転</strong> させます。
+                    <ul class="list-inside ml-6"><li>手前に回すとズームイン（拡大）、奥に回すとズームアウト（縮小）します。</li></ul>
+                </li>
+                <li><strong>平行移動 (Pan/Track):</strong> <strong><code class="bg-slate-200 px-1 rounded">Shift</code>キーを押しながら</strong>、マウスの <strong>中ボタンを押しながら</strong> ドラッグします。
+                    <ul class="list-inside ml-6"><li>視点が上下左右に平行移動します。</li></ul>
+                </li>
+            </ul>
+            <h3 class="text-xl font-semibold mb-2">テンキーでの視点切り替え (キーボード右側のテンキー):</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li><code class="bg-slate-200 px-1 rounded">1</code> キー: 正面 (Front View)</li>
+                <li><code class="bg-slate-200 px-1 rounded">3</code> キー: 右面 (Right View)</li>
+                <li><code class="bg-slate-200 px-1 rounded">7</code> キー: 上面 (Top View)</li>
+                <li><code class="bg-slate-200 px-1 rounded">Ctrl</code> + <code class="bg-slate-200 px-1 rounded">1</code> キー: 背面 (Back View)</li>
+                <li><code class="bg-slate-200 px-1 rounded">Ctrl</code> + <code class="bg-slate-200 px-1 rounded">3</code> キー: 左面 (Left View)</li>
+                <li><code class="bg-slate-200 px-1 rounded">Ctrl</code> + <code class="bg-slate-200 px-1 rounded">7</code> キー: 底面 (Bottom View)</li>
+                <li><code class="bg-slate-200 px-1 rounded">5</code> キー: 透視投影 (Perspective) / 平行投影 (Orthographic) の切り替え</li>
+                <li><code class="bg-slate-200 px-1 rounded">0</code> キー: カメラビュー</li>
+            </ul>
+            <h3 class="text-xl font-semibold mb-2">もしテンキーがない場合:</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>Blenderのメニューバーから <code class="bg-slate-200 px-1 rounded">編集 (Edit)</code> > <code class="bg-slate-200 px-1 rounded">プリファレンス (Preferences)</code> を選択。</li>
+                <li><code class="bg-slate-200 px-1 rounded">入力 (Input)</code> タブの中にある <code class="bg-slate-200 px-1 rounded">キーボード (Keyboard)</code> セクションで、<code class="bg-slate-200 px-1 rounded">テンキーを模倣 (Emulate Numpad)</code> にチェックを入れます。</li>
+                <li>これで、キーボード上部の数字キーがテンキーの代わりになります。</li>
+                <li>または、3Dビューポート右上に表示されているX,Y,Zの軸を示すギズモをクリックしても視点を変更できます。</li>
+            </ul>
+            <h3 class="text-xl font-semibold mb-2">練習してみよう！</h3>
+            <p class="mb-4">初期配置されている立方体を、色々な角度から眺めてみましょう。</p>
+            <p class="mt-4 text-sm text-slate-600">このセクションでは、3Dビューポートでの基本的な視点操作方法を解説します。マウスとキーボード（テンキー）を使った操作を習得し、自由に視点を変えられるようになりましょう。</p>
+        </section>
+
+        <section id="slide4" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">スライド 4: オブジェクトの操作 ～動かして、回して、大きくする～</h2>
+            <div class="image-placeholder my-4">
+                <strong>[画像プレースホルダー]</strong>
+                <p>3Dビューポート内でオブジェクト（例：立方体）が選択され、移動マニピュレーター（XYZ軸の矢印）、回転マニピュレーター（XYZ軸の円弧）、スケールマニピュレーター（XYZ軸の線と端の四角）がそれぞれ表示されている状態のスクリーンショット3点。ツールバーの対応するツールアイコン（移動、回転、スケール）も各画像でハイライトされていると良い。</p>
+            </div>
+            <p class="mb-4">オブジェクトを操作する基本は「選択」してから「移動」「回転」「拡大縮小」です。</p>
+            <h3 class="text-xl font-semibold mb-2">オブジェクトの選択:</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>操作したいオブジェクトを <strong>左クリック</strong> します。選択されるとオレンジ色の枠線で囲まれます。</li>
+                <li>複数のオブジェクトを選択したい場合は、<strong><code class="bg-slate-200 px-1 rounded">Shift</code>キーを押しながら</strong> 左クリックで追加選択できます。</li>
+            </ul>
+            <h3 class="text-xl font-semibold mb-2">マニピュレーター (Gizmo) を使った操作:</h3>
+            <p class="mb-2">オブジェクトを選択すると、そのオブジェクトの中心に矢印や円弧などの操作ハンドル（マニピュレーター/ギズモ）が表示されます。（ツールバーで「移動」「回転」「スケール」ツールが選択されている場合）</p>
+            <ol class="list-decimal list-inside mb-4 space-y-2">
+                <li><strong>移動 (Move):</strong>
+                    <ul class="list-disc list-inside ml-6">
+                        <li>ツールバーの十字矢印のアイコン（移動ツール）を選択します。</li>
+                        <li>オブジェクトに表示された <strong>赤 (X軸)・緑 (Y軸)・青 (Z軸)</strong> の矢印をドラッグすると、その軸方向に移動できます。</li>
+                        <li>中央の小さな白い円をドラッグすると、視点に対して自由に移動できます。</li>
+                        <li>ショートカットキー: <code class="bg-slate-200 px-1 rounded">G</code> キー (Grab/Move)
+                            <ul class="list-circle list-inside ml-6"><li><code class="bg-slate-200 px-1 rounded">G</code> キーを押した後、<code class="bg-slate-200 px-1 rounded">X</code> <code class="bg-slate-200 px-1 rounded">Y</code> <code class="bg-slate-200 px-1 rounded">Z</code> キーを押すと、その軸方向にのみ移動できます。</li>
+                            <li>例: <code class="bg-slate-200 px-1 rounded">G</code> -> <code class="bg-slate-200 px-1 rounded">X</code> でX軸方向に移動。</li></ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>回転 (Rotate):</strong>
+                    <ul class="list-disc list-inside ml-6">
+                        <li>ツールバーの円弧のアイコン（回転ツール）を選択します。</li>
+                        <li>オブジェクトに表示された <strong>赤 (X軸)・緑 (Y軸)・青 (Z軸)</strong> の円弧をドラッグすると、その軸を中心に回転できます。</li>
+                        <li>ショートカットキー: <code class="bg-slate-200 px-1 rounded">R</code> キー (Rotate)
+                            <ul class="list-circle list-inside ml-6"><li><code class="bg-slate-200 px-1 rounded">R</code> キーを押した後、<code class="bg-slate-200 px-1 rounded">X</code> <code class="bg-slate-200 px-1 rounded">Y</code> <code class="bg-slate-200 px-1 rounded">Z</code> キーを押すと、その軸を中心に回転できます。</li></ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>拡大縮小 (Scale):</strong>
+                    <ul class="list-disc list-inside ml-6">
+                        <li>ツールバーの四角と矢印のアイコン（スケールツール）を選択します。</li>
+                        <li>オブジェクトに表示された <strong>赤 (X軸)・緑 (Y軸)・青 (Z軸)</strong> の線の端にある四角をドラッグすると、その軸方向に拡大縮小できます。</li>
+                        <li>外側の白い円弧をドラッグすると、全体を均等に拡大縮小できます。</li>
+                        <li>ショートカットキー: <code class="bg-slate-200 px-1 rounded">S</code> キー (Scale)
+                            <ul class="list-circle list-inside ml-6"><li><code class="bg-slate-200 px-1 rounded">S</code> キーを押した後、<code class="bg-slate-200 px-1 rounded">X</code> <code class="bg-slate-200 px-1 rounded">Y</code> <code class="bg-slate-200 px-1 rounded">Z</code> キーを押すと、その軸方向にのみ拡大縮小できます。</li></ul>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">操作のキャンセルと確定:</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li><code class="bg-slate-200 px-1 rounded">G</code>, <code class="bg-slate-200 px-1 rounded">R</code>, <code class="bg-slate-200 px-1 rounded">S</code> キーで操作中に、<strong>右クリック</strong> または <code class="bg-slate-200 px-1 rounded">Esc</code> キーで操作をキャンセルできます。</li>
+                <li>操作中に <strong>左クリック</strong> または <code class="bg-slate-200 px-1 rounded">Enter</code> キーで操作を確定します。</li>
+            </ul>
+            <h3 class="text-xl font-semibold mb-2">練習してみよう！</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>初期配置の立方体を選択し、移動、回転、拡大縮小を試してみましょう。</li>
+                <li>間違って操作してしまっても大丈夫！ <code class="bg-slate-200 px-1 rounded">Ctrl</code> + <code class="bg-slate-200 px-1 rounded">Z</code> キーで元に戻せます (Undo)。</li>
+            </ul>
+            <p class="mt-4 text-sm text-slate-600">このセクションでは、3Dオブジェクトの基本的な操作方法（選択、移動、回転、拡大縮小）を学びます。マニピュレーターとショートカットキーを使った効率的な操作を身につけましょう。</p>
+        </section>
+
+        <section id="slide5" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">スライド 5: 最初の作品：マグカップを作ってみよう！～ステップ１：基本の形を追加～</h2>
+            <div class="image-placeholder my-4">
+                <strong>[画像プレースホルダー]</strong>
+                <p>1. 3Dビューポートで立方体が選択され、Xキーを押した後に表示される「削除？」確認メニューのスクリーンショット。</p>
+                <p>2. Shift+Aキーで表示された「追加」メニューの中から「メッシュ」>「円柱」がハイライトされ選択されている様子のスクリーンショット。</p>
+                <p>3. 3Dビューポートに円柱が追加され、画面左下に「円柱を追加」オペレーターパネルが表示されている状態のスクリーンショット。オペレーターパネル内の「頂点数」「半径」「深度」の項目が示されていると良い。</p>
+            </div>
+            <p class="mb-4">いよいよマグカップ作りを始めます！まずはマグカップの本体となる円柱を追加しましょう。</p>
+            <h3 class="text-xl font-semibold mb-2">初期配置の立方体を削除:</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>3Dビューポートで立方体を <strong>左クリック</strong> して選択します。</li>
+                <li><code class="bg-slate-200 px-1 rounded">X</code> キーを押します。</li>
+                <li>確認のメニューが表示されるので、「削除 (Delete)」を左クリックします。</li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">新しいオブジェクト（円柱）を追加:</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>3Dビューポート内で <strong><code class="bg-slate-200 px-1 rounded">Shift</code> + <code class="bg-slate-200 px-1 rounded">A</code> キー</strong> を押します。（<code class="bg-slate-200 px-1 rounded">A</code> は Add の A）
+                    <ul class="list-disc list-inside ml-6"><li>「追加 (Add)」メニューが表示されます。</li></ul>
+                </li>
+                <li>メニューの中から <code class="bg-slate-200 px-1 rounded">メッシュ (Mesh)</code> > <code class="bg-slate-200 px-1 rounded">円柱 (Cylinder)</code> を選択します。
+                    <ul class="list-disc list-inside ml-6"><li>3Dカーソル（赤と白の浮き輪のようなもの）がある位置に円柱が追加されます。</li></ul>
+                </li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">円柱の初期設定を変更 (オペレーターパネル):</h3>
+            <p class="mb-2">円柱を追加した直後、3Dビューポートの左下に「円柱を追加 (Add Cylinder)」という小さなパネルが表示されます。（表示されていない場合は <code class="bg-slate-200 px-1 rounded">F9</code> キーを押すか、パネルの左端にある小さな <code class="bg-slate-200 px-1 rounded">&gt;</code> をクリックして開きます）ここで円柱の基本的な形状を調整できます。</p>
+             <div class="image-placeholder my-2">
+                <strong>[画像プレースホルダー]</strong>
+                <p>「円柱を追加」オペレーターパネルの拡大スクリーンショット。「頂点数(Vertices)」「半径(Radius)」「深度(Depth)」の各設定項目が明確に示されている。</p>
+            </div>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li><strong>頂点数 (Vertices):</strong> 円柱の側面を構成する頂点の数です。初期値は32ですが、もう少し滑らかにしたい場合は数値を大きくします (例: 64)。逆にカクカクさせたい場合は小さくします。今回は <code class="bg-slate-200 px-1 rounded">32</code> のままでもOKです。</li>
+                <li><strong>半径 (Radius):</strong> 円柱の底面の半径です。</li>
+                <li><strong>深度 (Depth):</strong> 円柱の高さです。</li>
+            </ul>
+            <h4 class="text-lg font-semibold mb-2">ポイント:</h4>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>オペレーターパネルでの設定は、オブジェクトを追加した直後、他の操作をする前に行ってください。一度他の操作をすると、このパネルは消えてしまいます。</li>
+                <li>もしパネルが消えてしまっても、オブジェクトを削除して再度追加すれば大丈夫です。</li>
+            </ul>
+            <p class="mt-4 text-sm text-slate-600">このセクションから、実際にマグカップのモデリングを開始します。最初のステップとして、マグカップの本体となる基本形状（円柱）を追加し、その初期設定を行う方法を学びます。</p>
+        </section>
+
+        <section id="slide6" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">スライド 6: マグカップを作ってみよう！～ステップ２：形を編集する準備「編集モード」～</h2>
+            <div class="image-placeholder my-4">
+                <strong>[画像プレースホルダー]</strong>
+                <p>1. 3Dビューポート左上にあるモード切替ドロップダウンメニューのスクリーンショット。「オブジェクトモード」が選択されている状態と、「編集モード」が選択可能な状態が示されている。</p>
+                <p>2. 円柱オブジェクトが選択され、Tabキーを押して編集モードに切り替わった直後の3Dビューポートのスクリーンショット。円柱がオレンジ色でハイライトされ、頂点・辺・面が見える状態になっている。</p>
+                <p>3. 編集モード時の3Dビューポート上部（またはヘッダー）にある、頂点選択モード、辺選択モード、面選択モードの各アイコンボタン（点、線分、四角い面）が並んでいる部分の拡大スクリーンショット。</p>
+            </div>
+            <p class="mb-4">オブジェクトの形を細かく編集するには、「編集モード (Edit Mode)」に切り替える必要があります。</p>
+            <h3 class="text-xl font-semibold mb-2">オブジェクトモードと編集モード:</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li><strong>オブジェクトモード (Object Mode):</strong>
+                    <ul class="list-disc list-inside ml-6">
+                        <li>Blenderのデフォルトのモードです。</li>
+                        <li>オブジェクト全体の位置、回転、大きさを変更したり、モディファイア（後述）を追加したりします。</li>
+                        <li>複数のオブジェクトを扱うモードです。</li>
+                    </ul>
+                </li>
+                <li><strong>編集モード (Edit Mode):</strong>
+                    <ul class="list-disc list-inside ml-6">
+                        <li>選択した1つのオブジェクトの、<strong>頂点 (Vertex)・辺 (Edge)・面 (Face)</strong> といった構成要素を直接編集して、形を細かく作り込むモードです。</li>
+                    </ul>
+                </li>
+            </ul>
+            <h3 class="text-xl font-semibold mb-2">編集モードへの切り替え:</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>編集したいオブジェクト（今回は先ほど追加した円柱）を <strong>左クリック</strong> で選択します。</li>
+                <li>3Dビューポートの左上にあるモード切替メニュー（初期状態では「オブジェクトモード」と表示されています）をクリックし、リストから <code class="bg-slate-200 px-1 rounded">編集モード (Edit Mode)</code> を選択します。
+                    <ul class="list-disc list-inside ml-6"><li>または、キーボードの <strong><code class="bg-slate-200 px-1 rounded">Tab</code> キー</strong> を押すことでも、オブジェクトモードと編集モードを素早く切り替えられます。</li></ul>
+                </li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">編集モードの選択要素:</h3>
+            <p class="mb-2">編集モードに入ると、オブジェクトがオレンジ色で表示され、頂点・辺・面が見えるようになります。3Dビューポートのヘッダー（または画面上部）に、どの要素を選択して編集するかを選ぶボタンがあります。</p>
+            <div class="image-placeholder my-2">
+                <strong>[画像プレースホルダー]</strong>
+                <p>編集モード時の頂点選択、辺選択、面選択モードの各アイコン（点、線分、四角い面）が並んでいるUI部分の拡大スクリーンショット。</p>
+            </div>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li><strong>頂点選択モード (Vertex Select):</strong> 点を選択して編集します。（アイコンは点）</li>
+                <li><strong>辺選択モード (Edge Select):</strong> 2つの頂点を結ぶ線を選択して編集します。（アイコンは線分）</li>
+                <li><strong>面選択モード (Face Select):</strong> 3つ以上の辺で囲まれた面を選択して編集します。（アイコンは四角い面）</li>
+            </ul>
+            <p class="mb-4">これらのボタンをクリックするか、キーボードの <code class="bg-slate-200 px-1 rounded">1</code> (頂点), <code class="bg-slate-200 px-1 rounded">2</code> (辺), <code class="bg-slate-200 px-1 rounded">3</code> (面) キーで切り替えられます。（テンキーではなく、キーボード上部の数字キーです）</p>
+            <p class="mt-4 text-sm text-slate-600">このセクションでは、オブジェクトの形状をより詳細に編集するための「編集モード」について学びます。オブジェクトモードとの違い、編集モードへの切り替え方、そして編集対象となる要素（頂点・辺・面）の選択方法を理解しましょう。</p>
+        </section>
+        
+        <section id="slide7" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">スライド 7: マグカップを作ってみよう！～ステップ３：飲み口と内側を作る「押し出し」～</h2>
+            <div class="image-placeholder my-4 space-y-2">
+                <strong>[画像プレースホルダー - 3段階]</strong>
+                <p>1. 編集モード（面選択）で円柱の上面の面が選択され、オレンジ色でハイライトされている状態の3Dビューポートのスクリーンショット。</p>
+                <p>2. 上面をEキーで少し上に押し出し、次にSキーで内側に縮小してマグカップの縁の厚みを作った状態のスクリーンショット。押し出しと縮小の操作が分かるように、操作前後の比較や矢印での指示があると良い。</p>
+                <p>3. 縮小した上面を再度Eキーで下方向に押し下げて、マグカップの内側のくぼみを形成した状態のスクリーンショット。押し下げている深さが分かるような視点（少し斜め上からなど）が良い。</p>
+            </div>
+            <p class="mb-4">いよいよマグカップの形を作っていきます。「押し出し (Extrude)」という機能を使います。</p>
+            <h3 class="text-xl font-semibold mb-2">1. 上面の選択:</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>円柱が選択された状態で <strong><code class="bg-slate-200 px-1 rounded">Tab</code> キー</strong> を押し、編集モードに入ります。</li>
+                <li><strong>面選択モード</strong> に切り替えます。（3Dビューポート左上の面アイコンをクリック、またはキーボードの <code class="bg-slate-200 px-1 rounded">3</code> キー）</li>
+                <li>円柱の <strong>上面の面</strong> を <strong>左クリック</strong> して選択します。選択されるとオレンジ色でハイライトされます。</li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">2. 飲み口の厚みを作る (1回目の押し出しと縮小):</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>上面が選択された状態で、<strong><code class="bg-slate-200 px-1 rounded">E</code> キー</strong> (Extrude) を押します。
+                    <ul class="list-disc list-inside ml-6">
+                        <li>マウスを動かすと、選択した面が法線方向（面に垂直な方向）に押し出されます。</li>
+                        <li>ほんの少しだけ上に押し出し（マグカップの縁の厚み分）、<strong>左クリック</strong> で確定します。</li>
+                        <li>【ポイント】もし間違った方向に伸びてしまったら、右クリックでキャンセルし、再度 <code class="bg-slate-200 px-1 rounded">E</code> キーを押してください。</li>
+                    </ul>
+                </li>
+                <li>次に、押し出した面を少しだけ内側に縮小します。<strong><code class="bg-slate-200 px-1 rounded">S</code> キー</strong> (Scale) を押します。
+                    <ul class="list-disc list-inside ml-6">
+                        <li>マウスを動かすと、面が中心に向かって拡大縮小します。</li>
+                        <li>少しだけ内側に縮小し（飲み口の厚みが見えるように）、<strong>左クリック</strong> で確定します。</li>
+                    </ul>
+                </li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">3. マグカップの内側を作る (2回目の押し出し):</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>縮小した上面が選択されたままの状態で、再度 <strong><code class="bg-slate-200 px-1 rounded">E</code> キー</strong> を押します。</li>
+                <li>今度は、マウスを動かして面を <strong>下方向</strong> に押し出します。マグカップの底の手前くらいまで押し下げ、<strong>左クリック</strong> で確定します。
+                    <ul class="list-disc list-inside ml-6"><li>視点を変えながら（マウス中ボタンドラッグ）作業すると、深さを確認しやすいです。</li></ul>
+                </li>
+            </ol>
+            <p class="mb-4">これでマグカップの本体部分ができました！一度 <strong><code class="bg-slate-200 px-1 rounded">Tab</code> キー</strong> を押してオブジェクトモードに戻り、形を確認してみましょう。</p>
+            <p class="mt-4 text-sm text-slate-600">このセクションでは、マグカップの主要な形状を作成する「押し出し(Extrude)」操作を学びます。面を選択し、押し出して厚みを作り、さらに内側に押し込んでくぼみを作る一連のプロセスを体験します。</p>
+        </section>
+
+        <section id="slide8" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">スライド 8: マグカップを作ってみよう！～ステップ４：取っ手の準備～</h2>
+            <div class="image-placeholder my-4 space-y-2">
+                <strong>[画像プレースホルダー - 複数段階]</strong>
+                <p>1. オブジェクトモードで、Shift+Aキーから「メッシュ」>「トーラス」を選択し、トーラスがマグカップ本体（円柱）と同じ位置に追加された直後の3Dビューポートのスクリーンショット。</p>
+                <p>2. 追加されたトーラスをGキー（移動）、Rキー（回転）、Sキー（拡大縮小）を使って、マグカップの側面に取り付けられるような適切な位置と大きさに調整している途中の様子のスクリーンショット。X,Y,Z軸に沿った操作や、複数の視点（正面、側面、上面など）から確認しながら調整している様子が分かると良い。</p>
+                <p>3. トーラスがマグカップの取っ手として適切な位置、向き、大きさに配置された状態の3Dビューポートのスクリーンショット。</p>
+            </div>
+            <p class="mb-4">次に、マグカップの取っ手を作ります。取っ手には「トーラス (Torus)」というドーナツ型のメッシュを使います。</p>
+            <h3 class="text-xl font-semibold mb-2">1. オブジェクトモードであることを確認:</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>もし編集モードになっていたら、<strong><code class="bg-slate-200 px-1 rounded">Tab</code> キー</strong> を押してオブジェクトモードに戻ります。</li>
+            </ul>
+            <h3 class="text-xl font-semibold mb-2">2. トーラスを追加:</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>3Dビューポート内で <strong><code class="bg-slate-200 px-1 rounded">Shift</code> + <code class="bg-slate-200 px-1 rounded">A</code> キー</strong> を押します。</li>
+                <li><code class="bg-slate-200 px-1 rounded">メッシュ (Mesh)</code> > <code class="bg-slate-200 px-1 rounded">トーラス (Torus)</code> を選択します。
+                    <ul class="list-disc list-inside ml-6"><li>円柱（マグカップ本体）と同じ位置にトーラスが追加されるので、重なって見えるかもしれません。</li></ul>
+                </li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">3. トーラスを移動・回転・拡大縮小して配置:</h3>
+            <p class="mb-2">ここが少し根気のいる作業です。スライド4で学んだオブジェクトの操作（移動 <code class="bg-slate-200 px-1 rounded">G</code>, 回転 <code class="bg-slate-200 px-1 rounded">R</code>, 拡大縮小 <code class="bg-slate-200 px-1 rounded">S</code>）を駆使して、トーラスをマグカップの取っ手らしい位置と大きさに調整します。</p>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li><strong><code class="bg-slate-200 px-1 rounded">G</code> キー</strong> でトーラスをマグカップの側面に移動します。
+                    <ul class="list-disc list-inside ml-6"><li><code class="bg-slate-200 px-1 rounded">G</code> -> <code class="bg-slate-200 px-1 rounded">X</code> (X軸方向)、<code class="bg-slate-200 px-1 rounded">G</code> -> <code class="bg-slate-200 px-1 rounded">Y</code> (Y軸方向)、<code class="bg-slate-200 px-1 rounded">G</code> -> <code class="bg-slate-200 px-1 rounded">Z</code> (Z軸方向) も活用しましょう。</li></ul>
+                </li>
+                <li><strong><code class="bg-slate-200 px-1 rounded">R</code> キー</strong> でトーラスを回転させます。
+                    <ul class="list-disc list-inside ml-6"><li>例えば、X軸を中心に90度回転させるには、<code class="bg-slate-200 px-1 rounded">R</code> -> <code class="bg-slate-200 px-1 rounded">X</code> -> <code class="bg-slate-200 px-1 rounded">9</code> <code class="bg-slate-200 px-1 rounded">0</code> -> <code class="bg-slate-200 px-1 rounded">Enter</code> と入力します。</li></ul>
+                </li>
+                <li><strong><code class="bg-slate-200 px-1 rounded">S</code> キー</strong> でトーラスを適切な大きさに拡大縮小します。
+                    <ul class="list-disc list-inside ml-6"><li>取っ手はマグカップ本体より小さいので、全体的に縮小 (<code class="bg-slate-200 px-1 rounded">S</code> キー) し、必要であれば特定の軸方向だけ縮小 (<code class="bg-slate-200 px-1 rounded">S</code> -> <code class="bg-slate-200 px-1 rounded">X</code> など) します。</li></ul>
+                </li>
+            </ul>
+            <h4 class="text-lg font-semibold mb-2">ポイント:</h4>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>様々な視点から（正面 <code class="bg-slate-200 px-1 rounded">テンキー1</code>, 右面 <code class="bg-slate-200 px-1 rounded">テンキー3</code>, 上面 <code class="bg-slate-200 px-1 rounded">テンキー7</code> など）確認しながら調整すると、バランスが取りやすいです。</li>
+                <li>焦らず、少しずつ調整していきましょう。</li>
+                <li>トーラスのオペレーターパネル（追加直後に左下に表示）で、「大半径 (Major Radius)」「小半径 (Minor Radius)」などを調整して、取っ手の太さや大きさを変えることもできます。</li>
+            </ul>
+            <p class="mt-4 text-sm text-slate-600">このセクションでは、マグカップの取っ手部分を作成します。新しいメッシュ（トーラス）を追加し、移動・回転・拡大縮小を駆使して適切な位置と形に調整する実践的な操作を学びます。</p>
+        </section>
+
+        <section id="slide9" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">スライド 9: マグカップを作ってみよう！～ステップ５：取っ手をくっつける～</h2>
+            <div class="image-placeholder my-4 space-y-2">
+                <strong>[画像プレースホルダー - 2段階]</strong>
+                <p>1. オブジェクトモードで、まず取っ手（トーラス）を選択し、次にShiftキーを押しながらマグカップ本体（円柱）を追加選択している様子の3Dビューポートのスクリーンショット。両方のオブジェクトが選択され、マグカップ本体がアクティブ選択（明るいオレンジ色）になっている状態。</p>
+                <p>2. Ctrl+Jキーを押して二つのオブジェクトを結合した後の3Dビューポートのスクリーンショット。マグカップ本体と取っ手が一体化し、一つのオブジェクトとして選択されている状態。</p>
+                <p>(補足用) プロパティエディタのモディファイアタブで「ブーリアン」モディファイアを追加し、ターゲットオブジェクトとして取っ手を指定、操作を「合成」に設定しているUI部分のスクリーンショット。</p>
+            </div>
+            <p class="mb-4">マグカップ本体と取っ手が別々のオブジェクトになっているので、これを一つに結合します。</p>
+            <h3 class="text-xl font-semibold mb-2">簡単な方法：オブジェクトの結合 (Join)</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>オブジェクトモードであることを確認します。</li>
+                <li>まず <strong>取っ手 (トーラス)</strong> を <strong>右クリック</strong>（または左クリック、Blenderのバージョンや設定による選択方法）で選択します。</li>
+                <li>次に <strong><code class="bg-slate-200 px-1 rounded">Shift</code>キーを押しながら</strong>、<strong>マグカップ本体 (円柱)</strong> を <strong>右クリック</strong>（または左クリック）で追加選択します。
+                    <ul class="list-disc list-inside ml-6"><li>最後に選択したオブジェクト（マグカップ本体）がアクティブな選択（明るいオレンジ色）になります。</li></ul>
+                </li>
+                <li>両方のオブジェクトが選択された状態で、<strong><code class="bg-slate-200 px-1 rounded">Ctrl</code> + <code class="bg-slate-200 px-1 rounded">J</code> キー</strong> を押します。（<code class="bg-slate-200 px-1 rounded">J</code> は Join の J）
+                    <ul class="list-disc list-inside ml-6"><li>これで2つのオブジェクトが1つのオブジェクトとして結合されます。</li></ul>
+                </li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">もし取っ手の一部が本体にめり込みすぎている/離れすぎている場合:</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li><code class="bg-slate-200 px-1 rounded">Ctrl+J</code> で結合する前に、取っ手の位置や大きさを再度微調整してください。</li>
+                <li>または、結合後に編集モードに入り、頂点を移動させて調整することも可能です。（少し高度な操作になります）</li>
+            </ul>
+            <h3 class="text-xl font-semibold mb-2">（補足）より高度な結合方法：ブーリアンモディファイア</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li>「ブーリアン (Boolean)」という機能を使うと、オブジェクト同士を足し合わせたり、くり抜いたりする、より精密な結合が可能です。</li>
+                <li>これは少し複雑なので、今回は簡単な <code class="bg-slate-200 px-1 rounded">Ctrl + J</code> での結合を使いますが、興味のある方は調べてみてください。
+                    <ul class="list-disc list-inside ml-6"><li>参考: <a href="https://docs.blender.org/manual/ja/latest/modeling/modifiers/generate/boolean.html" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-sky-800 underline">Blender Docs: Boolean Modifier</a></li></ul>
+                </li>
+            </ul>
+            <p class="mt-4 text-sm text-slate-600">このセクションでは、別々に作成したマグカップの本体と取っ手を一つのオブジェクトに結合する方法を学びます。簡単な結合方法と、より高度なブーリアンモディファイアについて触れます。</p>
+        </section>
+
+        <section id="slide10" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">スライド 10: 色を塗ってみよう！～マテリアルを設定する～</h2>
+             <div class="image-placeholder my-4 space-y-2">
+                <strong>[画像プレースホルダー - 4段階]</strong>
+                <p>1. マグカップオブジェクトが選択された状態で、プロパティエディタ内の「マテリアルプロパティ」タブ（赤い球体のアイコン）が選択されている様子のスクリーンショット。</p>
+                <p>2. マテリアルプロパティタブ内で「+ 新規」ボタンがクリックされ、新しいマテリアルスロットが作成された直後のスクリーンショット。「サーフェス」セクションに「プリンシプルBSDF」が表示されている。</p>
+                <p>3. 「ベースカラー」の色のついた四角い部分をクリックし、カラーピッカーが表示されている様子のスクリーンショット。カラーピッカーで任意の色（例：白）を選択している状態。</p>
+                <p>4. 3Dビューポートの右上に並んでいるビューポートシェーディングオプションの中から、「レンダープレビュー」モード（右から2番目の球体に影がついたアイコン）が選択され、マグカップに設定した色や質感が反映されて表示されている様子のスクリーンショット。</p>
+            </div>
+            <p class="mb-4">形ができたので、マグカップに色を塗ってみましょう。Blenderでは「マテリアル (Material)」というものでオブジェクトの質感や色を設定します。</p>
+            <h3 class="text-xl font-semibold mb-2">1. マテリアルプロパティを開く:</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>マグカップのオブジェクトを選択した状態で、画面右側の <strong>プロパティエディタ</strong> を見ます。</li>
+                <li>プロパティエディタの中にある、<strong>赤い丸いアイコン（球体のアイコン）</strong> のタブが <strong>マテリアルプロパティ (Material Properties)</strong> です。これをクリックします。</li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">2. 新しいマテリアルを作成:</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>マテリアルプロパティタブの中に、<strong>「+ 新規 (+ New)」</strong> ボタンがあるので、これをクリックします。
+                    <ul class="list-disc list-inside ml-6"><li>新しいマテリアルが作成され、様々な設定項目が表示されます。</li></ul>
+                </li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">3. ベースカラーを変更:</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>設定項目の中に <strong>「ベースカラー (Base Color)」</strong> という項目があります。
+                    <ul class="list-disc list-inside ml-6">
+                        <li>その右側にある色のついた四角い部分を <strong>左クリック</strong> します。</li>
+                        <li>カラーピッカーが表示されるので、好きな色を選んでください。</li>
+                        <li>例えば、白いマグカップにしたい場合は、円形の色相環の外側にある縦のスライダーを一番上にし、色相環の中の白い点を選択します。</li>
+                    </ul>
+                </li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">4. 色の確認 (レンダープレビューモード):</h3>
+            <p class="mb-2">設定した色が3Dビューポートでどのように見えるか確認しましょう。</p>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>3Dビューポートの右上にある、丸いアイコンが4つ並んでいるところを探します。
+                    <ul class="list-disc list-inside ml-6">
+                        <li>右から2番目のアイコン（球体に影がついているようなアイコン）が <strong>レンダープレビュー (Rendered Preview)</strong> モードです。これをクリックします。</li>
+                         <div class="image-placeholder my-1 text-sm">
+                            <strong>[画像プレースホルダー]</strong>
+                            <p>3Dビューポート右上のレンダープレビューモードのアイコンがハイライトされている部分の拡大スクリーンショット。</p>
+                        </div>
+                    </ul>
+                </li>
+                <li>ビューポートの表示が切り替わり、ライトに照らされた状態でマテリアルの色や質感が見えるようになります。
+                    <ul class="list-disc list-inside ml-6"><li>もし暗すぎる場合は、シーン内のライト（初期配置されていたもの）を選択し、プロパティエディタの電球アイコン（オブジェクトデータプロパティ）で明るさ (パワー) を調整できます。</li></ul>
+                </li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">他の設定も試してみよう (任意):</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li><strong>メタリック (Metallic):</strong> 数値を上げると金属のような質感になります。</li>
+                <li><strong>粗さ (Roughness):</strong> 数値を下げるとツルツルした反射が強い表面に、上げるとザラザラした反射が鈍い表面になります。</li>
+            </ul>
+            <p class="mt-4 text-sm text-slate-600">このセクションでは、作成したマグカップに色や質感を設定する「マテリアル」の基本を学びます。マテリアルの作成、ベースカラーの変更、そしてプレビューモードでの確認方法を解説します。</p>
+        </section>
+
+        <section id="slide11" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">スライド 11: 完成！そして次のステップへ</h2>
+            <div class="image-placeholder my-4 space-y-2">
+                <strong>[画像プレースホルダー - 2段階]</strong>
+                <p>1. F12キーを押して表示されたレンダリング結果ウィンドウのスクリーンショット。カメラ視点から見た完成したマグカップが綺麗にレンダリングされている状態。</p>
+                <p>2. レンダリング結果ウィンドウのメニューバーから「画像」>「名前を付けて保存...」が選択されている様子のスクリーンショット。または、Blenderのメインウィンドウのメニューバーから「ファイル」>「保存」または「名前を付けて保存...」が選択され、ファイル保存ダイアログが表示されている様子のスクリーンショット。</p>
+            </div>
+            <h3 class="text-xl font-semibold mb-2 text-green-600">おめでとうございます！簡単なマグカップが完成しました！</h3>
+            <p class="mb-4">基本的なモデリングの流れを体験できたでしょうか？</p>
+            <h3 class="text-xl font-semibold mb-2">レンダリングしてみよう (<code class="bg-slate-200 px-1 rounded">F12</code>キー):</h3>
+            <p class="mb-2">作成した3Dモデルを最終的な画像として出力することを「レンダリング」と言います。</p>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>キーボードの <strong><code class="bg-slate-200 px-1 rounded">F12</code> キー</strong> を押します。
+                    <ul class="list-disc list-inside ml-6">
+                        <li>新しいウィンドウが開き、カメラから見た視点でレンダリングが開始されます。</li>
+                        <li>完了すると、画像が表示されます。</li>
+                    </ul>
+                </li>
+                <li>表示された画像を保存するには、レンダリング結果ウィンドウのメニューから <code class="bg-slate-200 px-1 rounded">画像 (Image)</code> > <code class="bg-slate-200 px-1 rounded">名前を付けて保存 (Save As...)</code> を選択します。</li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">作品を保存しよう:</h3>
+            <p class="mb-2">Blenderの作業ファイル（.blendファイル）を保存しておけば、後で編集を再開できます。</p>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>Blenderのメニューバーから <code class="bg-slate-200 px-1 rounded">ファイル (File)</code> > <code class="bg-slate-200 px-1 rounded">保存 (Save)</code> または <code class="bg-slate-200 px-1 rounded">名前を付けて保存 (Save As...)</code> を選択します。</li>
+                <li>ファイル名と保存場所を指定して保存します。こまめに保存する習慣をつけましょう！</li>
+            </ol>
+            <h3 class="text-xl font-semibold mb-2">さらにBlenderを学ぶには？</h3>
+            <p class="mb-2">Blenderは非常に奥が深いソフトです。今日作ったマグカップはほんの入り口に過ぎません。もっと色々なものを作ってみたいと思ったら、以下のリソースを参考にしてみてください。</p>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <li><strong>Blender公式サイトのチュートリアル (英語ですが豊富です):</strong>
+                    <ul class="list-disc list-inside ml-6"><li><a href="https://www.blender.org/support/tutorials/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-sky-800 underline">Blender Tutorials</a></li></ul>
+                </li>
+                <li><strong>Blender日本語ドキュメント:</strong>
+                    <ul class="list-disc list-inside ml-6"><li><a href="https://docs.blender.org/manual/ja/latest/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-sky-800 underline">Blenderマニュアル</a></li></ul>
+                </li>
+                <li><strong>YouTubeなどの動画チュートリアル:</strong>
+                    <ul class="list-disc list-inside ml-6">
+                        <li>「Blender 初心者 チュートリアル」「Blender modeling tutorial for beginners」などで検索すると、たくさんの日本語や英語の動画が見つかります。</li>
+                        <li>例: CG Geek, Blender Guru (英語ですが非常に有名で質が高いです)</li>
+                    </ul>
+                </li>
+                <li><strong>書籍:</strong> Blenderの入門書も多く出版されています。</li>
+            </ul>
+            <p class="font-semibold">色々なものを作って、3Dモデリングを楽しんでください！</p>
+            <p class="mt-4 text-sm text-slate-600">この最終セクションでは、作成したマグカップを画像として出力（レンダリング）する方法と、作業ファイルを保存する方法を説明します。また、さらにBlenderの学習を深めるためのリソースも紹介しています。</p>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.content-section');
+            const mobileNavToggle = document.getElementById('mobileNavToggle');
+            const sidebar = document.getElementById('sidebar');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                        if (window.innerWidth < 768) { 
+                            sidebar.classList.add('translate-x-sidebar-full');
+                        }
+                    }
+                });
+            });
+
+            function onScroll() {
+                let currentSectionId = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    // Adjust the offset for active link highlighting considering the scroll-margin-top
+                    // We want the link to be active when the top of the section is near the top of the viewport,
+                    // respecting the scroll-margin-top.
+                    // A common approach is to check if the section is within a certain range from the top.
+                    // The value '6 * 16' (96px) corresponds to scroll-margin-top: 6rem;
+                    // Add a little more buffer, e.g., 100px or sectionHeight / 3
+                    const scrollMarginOffset = parseFloat(getComputedStyle(section).scrollMarginTop) || (6 * 16); // 6rem fallback
+                    if (pageYOffset >= (sectionTop - scrollMarginOffset - (sectionHeight / 3)) ) { 
+                        currentSectionId = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active-nav-link');
+                    if (link.getAttribute('href') === '#' + currentSectionId) {
+                        link.classList.add('active-nav-link');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', onScroll);
+            onScroll(); 
+
+            mobileNavToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('translate-x-sidebar-full');
+            });
+
+            document.addEventListener('click', function(event) {
+                const isClickInsideSidebar = sidebar.contains(event.target);
+                const isClickOnToggle = mobileNavToggle.contains(event.target);
+
+                if (!isClickInsideSidebar && !isClickOnToggle && window.innerWidth < 768) {
+                    if (!sidebar.classList.contains('translate-x-sidebar-full')) {
+                         sidebar.classList.add('translate-x-sidebar-full');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
