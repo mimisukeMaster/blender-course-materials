@@ -68,9 +68,9 @@
             <li><a href="#slide4" class="nav-link block p-2 rounded-md">オブジェクトの操作</a></li>
             <li><a href="#slide5" class="nav-link block p-2 rounded-md">ステップ1：基本の形</a></li>
             <li><a href="#slide6" class="nav-link block p-2 rounded-md">ステップ2：編集モード</a></li>
-            <li><a href="#slide7" class="nav-link block p-2 rounded-md">ステップ3：本体のくり抜き</a></li>
-            <li><a href="#slide8" class="nav-link block p-2 rounded-md">ステップ4：取っ手の準備</a></li>
-            <li><a href="#slide9" class="nav-link block p-2 rounded-md">ステップ5：本体と取っ手の結合</a></li>
+            <li><a href="#slide7" class="nav-link block p-2 rounded-md">ステップ3：取っ手の準備</a></li>
+            <li><a href="#slide8" class="nav-link block p-2 rounded-md">ステップ4：本体と取っ手の結合</a></li>
+            <li><a href="#slide9" class="nav-link block p-2 rounded-md">ステップ5：本体のくり抜き</a></li>
             <li><a href="#slide10" class="nav-link block p-2 rounded-md">ステップ6：色を塗る</a></li>
             <li><a href="#slide11" class="nav-link block p-2 rounded-md">完成と次へ</a></li>
         </ul>
@@ -93,8 +93,8 @@
                 <li><strong>動画編集:</strong> 高度な動画編集機能も備わっています。</li>
                 <li>その他、VFX（視覚効果）、スカルプト、シミュレーションなど、プロの現場でも使われる機能がたくさん！</li>
             </ul>
-            <p class="mb-4">「なんだか難しそう…」と感じるかもしれませんが、大丈夫！このチュートリアルでは、Blenderの基本的な操作を学びながら、簡単な「マグカップ」を一緒に作ってみましょう。</p>
-            <h4 class="text-lg font-semibold mb-2">まずはBlenderをダウンロード！</h4>
+            <p class="mb-4">このチュートリアルでは、Blenderの基本的な操作を学びながら、簡単な「マグカップ」を一緒に作ってみましょう。</p>
+            <h4 class="text-lg font-semibold mb-2">まずはBlenderをダウンロード：</h4>
             <ul class="list-disc list-inside">
                 <li>Blender公式サイト: <a href="https://www.blender.org/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-sky-800 underline">https://www.blender.org/</a>
                     <ul class="list-inside ml-4">
@@ -189,6 +189,20 @@
                 <li>これで、キーボード上部の数字キーがテンキーの代わりになります。</li>
                 <li>または、3Dビューポート右上に表示されているX,Y,Zの軸を示すギズモをクリックしても視点を変更できます。</li>
             </ul>
+            <h3 class="text-xl font-semibold mb-2">シェーディングモードの切り替え (パイメニュー):</h3>
+            <ul class="list-disc list-inside mb-4 space-y-1">
+                <div class="my-2">
+                    <img src="./img/insert_3.png" class="rounded-lg shadow-md">
+                </div>
+                <li><strong><code class="bg-slate-200 px-1 rounded">Z</code> キー:</strong> 表示方法を切り替えるための円形のメニュー（パイメニュー）が表示されます。マウスを動かして選択したいモードの方向でクリックすると切り替わります。
+                    <ul class="list-inside ml-6 space-y-1 mt-1">
+                        <li><strong>ソリッド:</strong> モデリング作業の基本となる、影や色がないグレーの表示です。</li>
+                        <li><strong>ワイヤーフレーム:</strong> オブジェクトの骨組み（辺）のみを表示します。</li>
+                        <li><strong>マテリアルプレビュー:</strong> 設定した色や質感を簡易的なライトで確認できます。</li>
+                        <li><strong>レンダー:</strong> シーン内のライトを正確に反映した、最終的な見た目に最も近い表示です。</li>
+                    </ul>
+                </li>
+            </ul>
             <h3 class="text-xl font-semibold mb-2">練習してみよう！</h3>
             <p class="mb-4">初期配置されている立方体を、色々な角度から眺めてみましょう。</p>
             <p class="mt-4 text-sm text-slate-600">このセクションでは、3Dビューポートでの基本的な視点操作方法を解説します。マウスとキーボード（テンキー）を使った操作を習得し、自由に視点を変えられるようになりましょう。</p>
@@ -275,7 +289,7 @@
             </div>
             <h3 class="text-xl font-semibold mb-2">円柱の初期設定を変更 (オペレーターパネル):</h3>
             <p class="mb-2">円柱を追加した直後、3Dビューポートの左下に「円柱を追加 (Add Cylinder)」という小さなパネルが表示されます。（表示されていない場合は <code class="bg-slate-200 px-1 rounded">F9</code> キーを押すか、パネルの左端にある小さな <code class="bg-slate-200 px-1 rounded">&gt;</code> をクリックして開きます）ここで円柱の基本的な形状を調整できます。</p>
-             <div class="my-2">
+            <div class="my-2">
                 <img src="./img/insert_6.png" class="rounded-lg">
             </div>
             <ul class="list-disc list-inside mb-4 space-y-1">
@@ -329,111 +343,123 @@
                 <li><strong>辺選択モード (Edge Select):</strong> 2つの頂点を結ぶ線を選択して編集します。（アイコンは線分）</li>
                 <li><strong>面選択モード (Face Select):</strong> 3つ以上の辺で囲まれた面を選択して編集します。（アイコンは四角い面）</li>
             </ul>
-            <p class="mb-4">これらのボタンをクリックするか、キーボードの <code class="bg-slate-200 px-1 rounded">1</code> (頂点), <code class="bg-slate-200 px-1 rounded">2</code> (辺), <code class="bg-slate-200 px-1 rounded">3</code> (面) キーで切り替えられます。（テンキーではなく、キーボード上部の数字キーです）</p>
+            <p class="mb-4">これらのボタンをクリックするか、キーボードの <code class="bg-slate-200 px-1 rounded">1</code> (頂点), <code class="bg-slate-200 px-1 rounded">2</code> (辺), <code class="bg-slate-200 px-1 rounded">3</code> (面) キーで切り替えられます。（テンキーではなく、キーボード上部の数字キーです。「テンキーを模倣」しているならキー操作はできません。）</p>
             <p class="mt-4 text-sm text-slate-600">このセクションでは、オブジェクトの形状をより詳細に編集するための「編集モード」について学びます。オブジェクトモードとの違い、編集モードへの切り替え方、そして編集対象となる要素（頂点・辺・面）の選択方法を理解しましょう。</p>
         </section>
         
         <section id="slide7" class="content-section bg-white p-6 rounded-lg shadow">
-            <h2 class="text-2xl font-bold text-sky-700 mb-4">ステップ３：本体のくり抜き</h2>
-            <div class="image-placeholder my-4 space-y-2">
-                <strong>[画像プレースホルダー - 3段階]</strong>
-                <p>1. 編集モード（面選択）で円柱の上面が選択されている状態。</p>
-                <p>2. 上面をEキーで押し出し、Sキーで内側に縮小して縁の厚みを作った状態。</p>
-                <p>3. 縮小した上面を再度Eキーで下方向に押し下げて、内側のくぼみを形成した状態。</p>
-            </div>
-            <p class="mb-4">マグカップの本体に、飲み物を入れるためのくぼみを作ります。これは「押し出し (Extrude)」という重要な機能を使います。</p>
-            <h3 class="text-xl font-semibold mb-2">飲み口と内側を作る:</h3>
-            <ol class="list-decimal list-inside mb-4 space-y-1">
-                <li><strong>面選択モード</strong>（ショートカット：<code class="bg-slate-200 px-1 rounded">3</code>キー）で、円柱の<strong>上面の面</strong>を選択します。</li>
-                <li><strong><code class="bg-slate-200 px-1 rounded">E</code> キー</strong>で面を少しだけ押し出し、すぐに<strong>左クリック</strong>で確定します。次に<strong><code class="bg-slate-200 px-1 rounded">S</code> キー</strong>で面を内側に少し縮小し、飲み口の厚みを作ります。</li>
-                <li>再度<strong><code class="bg-slate-200 px-1 rounded">E</code> キー</strong>を押し、今度は面を<strong>下方向</strong>に押し下げて、マグカップの底の手前までくぼみを作ります。</li>
-            </ol>
-            <p class="mb-4">これでマグカップの本体ができました！ <strong><code class="bg-slate-200 px-1 rounded">Tab</code> キー</strong>でオブジェクトモードに戻り、形を確認しましょう。</p>
-            <p class="mt-4 text-sm text-slate-600">このセクションでは、マグカップの主要な形状を作成する「押し出し」操作を学びます。面を選択し、押し出して厚みを作り、さらに内側に押し込んでくぼみを作る一連のプロセスを体験します。</p>
-        </section>
-
-        <section id="slide8" class="content-section bg-white p-6 rounded-lg shadow">
-            <h2 class="text-2xl font-bold text-sky-700 mb-4">ステップ４：取っ手の準備</h2>
-            <div class="image-placeholder my-4 space-y-2">
-                <strong>[画像プレースホルダー - 2段階]</strong>
-                <p>1. オブジェクトモードで、Shift+Aキーから「メッシュ」>「トーラス」を追加した状態。</p>
-                <p>2. トーラスを移動・回転・拡大縮小して、マグカップ本体の側面に取っ手として配置した状態。</p>
-            </div>
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">ステップ３：取っ手の準備</h2>
             <p class="mb-4">次に、マグカップの取っ手を作ります。取っ手には「トーラス (Torus)」というドーナツ型のメッシュを使います。</p>
             <h3 class="text-xl font-semibold mb-2">トーラスを追加して配置:</h3>
             <ol class="list-decimal list-inside mb-4 space-y-1">
                 <li>オブジェクトモードで、<strong><code class="bg-slate-200 px-1 rounded">Shift</code> + <code class="bg-slate-200 px-1 rounded">A</code> キー</strong>から<code class="bg-slate-200 px-1 rounded">メッシュ</code> > <code class="bg-slate-200 px-1 rounded">トーラス</code>を追加します。</li>
+                <li>この時に画面左下に出る設定項目から<code class="bg-slate-200 px-1 rounded">小半径</code>を<code class="bg-slate-200 px-1 rounded">0.15</code>程度に設定します。</li>
+                <div class="my-2">
+                    <img src="./img/insert_9.png" class="rounded-lg shadow-md">
+                </div>
                 <li>移動(<code class="bg-slate-200 px-1 rounded">G</code>), 回転(<code class="bg-slate-200 px-1 rounded">R</code>), 拡大縮小(<code class="bg-slate-200 px-1 rounded">S</code>)を駆使して、トーラスをマグカップの取っ手らしい位置と大きさに調整します。</li>
+                <div class="my-2">
+                    <img src="./img/insert_10.png" class="rounded-lg shadow-md">
+                </div>
             </ol>
             <p class="mt-4 text-sm text-slate-600">このセクションでは、取っ手部分を作成し、本体の横に配置するまでを学びます。</p>
         </section>
 
-        <section id="slide9" class="content-section bg-white p-6 rounded-lg shadow">
-            <h2 class="text-2xl font-bold text-sky-700 mb-4">ステップ５：本体と取っ手の結合</h2>
-            <div class="image-placeholder my-4 space-y-2">
-                <strong>[画像プレースホルダー - 2段階]</strong>
-                <p>1. マグカップ本体を選択し、プロパティエディタのモディファイアタブから「ブーリアン」を追加しているUIのスクリーンショット。</p>
-                <p>2. ブーリアンモディファイアの設定で、操作を「合成(Union)」に、オブジェクトとして取っ手（トーラス）を指定し、「適用」ボタンを押した後の、きれいに一体化したマグカップのスクリーンショット。</p>
-            </div>
-            <p class="mb-4">くり抜いた本体と準備した取っ手を、正しく一体化させます。単純に重ねるだけでなく、内部の不要な面が残らないように結合するのがポイントです。</p>
-            
-            <h3 class="text-xl font-semibold mb-2">最終的な位置調整</h3>
-            <p class="mb-2">まず、取っ手（トーラス）がマグカップ本体の側面に少しだけめり込むように、最終的な位置調整を行います。これがきれいに結合するための準備です。</p>
-
-            <h3 class="text-xl font-semibold mb-2">本格的な結合方法：ブーリアンモディファイア</h3>
-            <p class="mb-2">内部に余計な面を残さず、2つのオブジェクトを完全に一体化させるには「ブーリアン」という機能を使うのが最も確実です。これは、足し算や引き算のようにメッシュを計算してくれます。</p>
+        <section id="slide8" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">ステップ４：本体と取っ手の結合</h2>
+            <p class="mb-4">まだ中身が詰まっている本体と準備した取っ手を一体化させます。</p>
+            <h3 class="text-xl font-semibold mb-2">ブーリアンモディファイアで結合する：</h3>
+            <p class="mb-2">内部に余計な面を残さず、2つのオブジェクトを完全に一体化させるには「ブーリアン」という機能を使うのが最も確実です。これは、AかつB、AまたはBのようにメッシュ同士の結合処理を計算してくれます。</p>
             <ol class="list-decimal list-inside mb-4 space-y-1">
-                <li>オブジェクトモードで、<strong>マグカップ本体</strong>を選択します。</li>
+                <li>オブジェクトモードで、<strong>マグカップ本体（円柱）</strong>を選択します。</li>
                 <li>プロパティエディタ（右側のレンチアイコン）から、<strong>「モディファイアを追加」</strong>をクリックし、リストから<strong>「ブーリアン」</strong>を選択します。</li>
+                <div class="my-2">
+                    <img src="./img/insert_11.png" class="rounded-lg shadow-md">
+                </div>
+                <div class="my-2">
+                    <img src="./img/insert_12.png" class="rounded-lg shadow-md">
+                </div>
                 <li>ブーリアンの設定項目が表示されます。<strong>「操作」</strong>が<strong>「合成 (Union)」</strong>になっていることを確認します。</li>
                 <li><strong>「オブジェクト」</strong>の項目で、スポイトアイコンをクリックした後、3Dビューポート内の<strong>取っ手（トーラス）</strong>をクリックして指定します。</li>
+                <div class="my-2">
+                    <img src="./img/insert_13.png" class="rounded-lg shadow-md">
+                </div>
                 <li>モディファイアのパネルの右肩にある下向き矢印をクリックし、<strong>「適用 (Apply)」</strong>を選択します。（または<code class="bg-slate-200 px-1 rounded">Ctrl+A</code>）</li>
-                <li>これで2つのオブジェクトが一体化しました。不要になった元の取っ手（トーラス）オブジェクトを選択して削除します。</li>
+                <div class="my-2">
+                    <img src="./img/insert_14.png" class="rounded-lg shadow-md">
+                </div>
+                <li>これで2つのオブジェクトが一体化しました。不要になった元の取っ手（トーラス）オブジェクトを選択して削除します。3Dビューポートから選択しずらい場合はアウトライナーから<strong>トーラス</strong>を選択して<strong><code class="bg-slate-200 px-1 rounded">X</code></strong>キーで削除します。</li>
+                <div class="my-2">
+                    <img src="./img/insert_15.png" class="rounded-lg shadow-md">
+                </div>
             </ol>
-            <div class="bg-sky-100 border-l-4 border-sky-500 text-sky-700 p-4 mt-4" role="alert">
-              <p class="font-bold">なぜ単純な結合(<code class="bg-slate-200 px-1 rounded">Ctrl+J</code>)ではダメ？</p>
-              <p>単純な結合は、オブジェクトをグループ化するようなもので、めり込んだ部分のメッシュは内部に残ったままになります。ブーリアンの「合成」を使うことで、この不要な内部ジオメトリを削除し、一つのきれいな形状にすることができます。</p>
-            </div>
-            <p class="mt-4 text-sm text-slate-600">このセクションでは、より高度で正確な結合方法である「ブーリアンモディファイア」を使い、マグカップを完成形に近づけます。</p>
+            <p class="mt-4 text-sm text-slate-600">このセクションでは、ブーリアンモディファイアを使い、マグカップの「外側」を完全に一体化させます。</p>
+        </section>
+
+        <section id="slide9" class="content-section bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-sky-700 mb-4">ステップ５：本体のくり抜き</h2>
+            <p class="mb-4">取っ手と一体化したマグカップの本体に、飲み物を入れるためのくぼみを作ります。</p>
+            <h3 class="text-xl font-semibold mb-2">飲み口と内側を作る:</h3>
+            <ol class="list-decimal list-inside mb-4 space-y-1">
+                <li>一体化したマグカップオブジェクトを選択し、<strong><code class="bg-slate-200 px-1 rounded">Tab</code> キー</strong>で編集モードに入ります。</li>
+                <li><strong>面選択モード</strong>（ショートカット：<code class="bg-slate-200 px-1 rounded">3</code>キー）で、マグカップの<strong>上面の面</strong>を選択します。</li>
+                <div class="my-2">
+                    <img src="./img/insert_16.png" class="rounded-lg shadow-md">
+                </div>
+                <li><strong><code class="bg-slate-200 px-1 rounded">E</code> キー</strong>で面を少しだけ押し出し、すぐに<strong>左クリック</strong>で確定します。次に<strong><code class="bg-slate-200 px-1 rounded">S</code> キー</strong>で面を内側に少し縮小し、飲み口の厚みを作ります。</li>
+                <div class="my-2">
+                    <img src="./img/insert_17.png" class="rounded-lg shadow-md">
+                </div>
+                <li>再度<strong><code class="bg-slate-200 px-1 rounded">E</code> キー</strong>を押し、今度は面を<strong>下方向</strong>に押し下げて、マグカップの底の手前までくぼみを作ります。</li>
+                <div class="my-2">
+                    <img src="./img/insert_18.png" class="rounded-lg shadow-md">
+                </div>
+            </ol>
+            <p class="mb-4">これで形が完成しました！ <strong><code class="bg-slate-200 px-1 rounded">Tab</code> キー</strong>でオブジェクトモードに戻り確認してみましょう。</p>
+            <p class="mt-4 text-sm text-slate-600">このセクションでは、一体化したオブジェクトの内側を「押し出し」操作でくり抜き、マグカップの形状を完成させます。</p>
         </section>
 
         <section id="slide10" class="content-section bg-white p-6 rounded-lg shadow">
             <h2 class="text-2xl font-bold text-sky-700 mb-4">ステップ６：色を塗る</h2>
-             <div class="image-placeholder my-4 space-y-2">
-                <strong>[画像プレースホルダー - 3段階]</strong>
-                <p>1. プロパティエディタの「マテリアルプロパティ」タブ（赤い球体アイコン）で「+ 新規」ボタンを押している様子。</p>
-                <p>2. 「ベースカラー」をクリックしてカラーピッカーを表示し、色を選択している様子。</p>
-                <p>3. 3Dビューポートを「レンダープレビュー」モードに切り替え、マグカップに色が反映されている様子。</p>
-            </div>
             <p class="mb-4">形ができたので、マグカップに色を塗ってみましょう。Blenderでは「マテリアル」でオブジェクトの質感や色を設定します。</p>
             <h3 class="text-xl font-semibold mb-2">マテリアルの設定:</h3>
             <ol class="list-decimal list-inside mb-4 space-y-1">
                 <li>プロパティエディタの<strong>マテリアルプロパティ</strong>タブ（赤い球体アイコン）を開きます。</li>
                 <li><strong>「+ 新規」</strong>ボタンで新しいマテリアルを作成します。</li>
+                <div class="my-2">
+                    <img src="./img/insert_19.png" class="rounded-lg shadow-md">
+                </div>
                 <li><strong>「ベースカラー」</strong>で好きな色を選びます。</li>
+                <div class="my-2" align="center">
+                    <img src="./img/insert_20.png" class="rounded-lg shadow-md" width="250px">
+                    <img src="./img/insert_21.png" class="rounded-lg shadow-md" width="250px">
+                </div>
+                <li><strong><code class="bg-slate-200 px-1 rounded">Z</code> キー</strong>を押して出てきたパイウィンドウから<strong>マテリアルプレビュー</strong>モードに切り替えると、色味を確認できます。</li>
+                <div class="my-2">
+                    <img src="./img/insert_22.png" class="rounded-lg shadow-md">
+                </div>
             </ol>
             <p class="mt-4 text-sm text-slate-600">このセクションでは、作成したマグカップに色や質感を設定する「マテリアル」の基本を学びます。</p>
         </section>
 
         <section id="slide11" class="content-section bg-white p-6 rounded-lg shadow">
             <h2 class="text-2xl font-bold text-sky-700 mb-4">完成！そして次のステップへ</h2>
-            <div class="image-placeholder my-4 space-y-2">
-                <strong>[画像プレースホルダー]</strong>
-                <p>F12キーで表示されたレンダリング結果ウィンドウに、完成したマグカップが綺麗に表示されているスクリーンショット。</p>
-            </div>
-            <h3 class="text-xl font-semibold mb-2 text-green-600">おめでとうございます！簡単なマグカップが完成しました！</h3>
-            <p class="mb-4">基本的なモデリングの流れを体験できたでしょうか？</p>
             <h3 class="text-xl font-semibold mb-2">レンダリングと保存:</h3>
             <ul class="list-disc list-inside mb-4 space-y-1">
                 <li><strong><code class="bg-slate-200 px-1 rounded">F12</code> キー</strong>で最終的な画像を生成（レンダリング）できます。</li>
+                <div class="my-2">
+                    <img src="./img/insert_23.png" class="rounded-lg shadow-md">
+                </div>
                 <li><code class="bg-slate-200 px-1 rounded">ファイル</code> > <code class="bg-slate-200 px-1 rounded">保存</code>で作業ファイル（.blend）を保存できます。</li>
             </ul>
+            <h3 class="text-xl font-semibold mb-2 text-green-600">おめでとうございます！簡単なマグカップが完成しました！</h3>
             <h3 class="text-xl font-semibold mb-2">さらにBlenderを学ぶには？</h3>
             <p class="mb-2">今日作ったマグカップはほんの入り口です。以下のリソースも参考に、色々なものを作って3Dモデリングを楽しんでください！</p>
             <ul class="list-disc list-inside mb-4 space-y-1">
-                <li><a href="https://www.blender.org/support/tutorials/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-sky-800 underline">Blender公式サイトのチュートリアル</a></li>
                 <li><a href="https://docs.blender.org/manual/ja/latest/" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-sky-800 underline">Blender日本語ドキュメント</a></li>
-                <li>YouTubeなどの動画チュートリアル</li>
+                <li><a href="https://www.youtube.com/@3DBibi/" target="_blank"rel="noopener noreferrer" class="text-sky-600 hover:text-sky-800 underline">3D Bibi</a>: 分かりやすい初心者向けチュートリアル動画を多数公開しています。</li>
+                <li><a href="https://www.cgradproject.com/archives/1723" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-sky-800 underline">CGRAD PROJECT</a>: チュートリアルサイト。バージョンは古いですが、最後まで終えるとかなりの力がつくと思います。</li>
+                <li><a href="https://www.youtube.com/@blenderguru" target="_blank"rel="noopener noreferrer" class="text-sky-600 hover:text-sky-800 underline">Blender Guru</a>: 海外の方ですが、質の高いチャプター形式の動画を公開しています。</li>
             </ul>
         </section>
 
